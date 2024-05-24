@@ -1,5 +1,14 @@
 from nicegui import ui, app
 
+from .page_template import mainpage
+
+
+def init() -> None:
+    @ui.page("/")
+    def show_dashboard():
+        with mainpage("Dashboard"):
+            content()
+
 
 def content() -> None:
     ui.label("Use the menu on the top right to navigate.")
