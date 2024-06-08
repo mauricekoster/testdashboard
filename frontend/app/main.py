@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 import os
+from pathlib import Path
+
 from fastapi import Request
 from fastapi.responses import RedirectResponse
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -7,8 +9,11 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from nicegui import Client, app, ui
 
 from . import dashboard
+from . import admin
 from . import login
 from . import projects
+from . import items
+from . import settings
 
 unrestricted_page_routes = {"/login"}
 
@@ -34,17 +39,17 @@ class AuthMiddleware(BaseHTTPMiddleware):
 
 app.add_middleware(AuthMiddleware)
 
+assets_path = Path(__file__).parent / "assets"
+app.add_media_files("/assets", assets_path)
+
 dashboard.init()
+admin.init()
 login.init()
 projects.init()
+items.init()
+settings.init()
 
 
-# ui.run_with(
-#     app,
-#     title="Test Dashboard",
-#     storage_secret="pick your private secret here",  # NOTE setting a secret is optional but allows for persistent storage per user
-# )
-#
 def handle_shutdown():
     print("Shutdown has been initiated!")
 
@@ -55,4 +60,3 @@ ui.run_with(
     title="Test Dashboard",
     storage_secret=os.environ.get("STORAGE_SECRET", "very very secret"),
 )
-print("huh")

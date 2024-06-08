@@ -6,7 +6,7 @@ from .page_template import mainpage
 def init() -> None:
     @ui.page("/")
     def show_dashboard():
-        with mainpage("Dashboard"):
+        with mainpage("Dashboard", "dashboard"):
             content()
 
 

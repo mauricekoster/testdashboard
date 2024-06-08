@@ -12,6 +12,8 @@ RUN pip install --no-cache-dir -r /tmp/requirements.txt
 ARG INSTALL_DEV=false
 RUN bash -c "if [ $INSTALL_DEV == 'true' ] ; then pip install -r /tmp/dev-requirements.txt ; fi"
 
+ARG BACKEND_API_URL=http://localhost
+ENV BACKEND_API_URL=$BACKEND_API_URL
 
 WORKDIR /app/
 

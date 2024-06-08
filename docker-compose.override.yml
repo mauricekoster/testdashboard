@@ -72,7 +72,7 @@ services:
     build:
       context: ./frontend
       args:
-        - BACKEND_API_URL=http://${DOMAIN?Variable not set}/api/v1
+        - BACKEND_API_URL=http://backend
     command: /start-reload.sh
 
 networks:
