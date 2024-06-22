@@ -1,12 +1,13 @@
 from nicegui import ui
 
-from .page_template import mainpage
+from .template import mainpage
+from .menus import main_menu
 
 
 def init() -> None:
     @ui.page("/projects")
     def show_projects():
-        with mainpage("Projects"):
+        with mainpage("Projects", main_menu, "projects"):
             content()
 
 

@@ -1,13 +1,19 @@
-from nicegui import ui, app
+from nicegui import ui, events
+from typing import List, Dict
+from app.client import APIException
 
-from .page_template import mainpage
-from .components import heading, navbar
+from .template import mainpage
+from app.components.main import heading, navbar
+from .menus import main_menu
+
+from app.models import UserCreate
+from app.client.users import create_user, read_users
 
 
 def init() -> None:
     @ui.page("/admin")
     def show_dashboard():
-        with mainpage("User Management", "admin"):
+        with mainpage("User Management", main_menu, "admin"):
             content()
 
 
@@ -45,24 +51,62 @@ async def add_user():
                 on_click=lambda: add_user_dialog.submit("Cancel"),
             )
 
-    print("XXXXXX")
     result = await add_user_dialog
     if result == "Cancel":
         return
 
-    data = dict(
+    data = UserCreate(
         email=email.value,
         full_name=full_name.value,
         password=set_password.value,
         is_active=is_active.value,
         is_superuser=is_superuser.value,
     )
-    ui.notify(f"You chose {result} Email: {email.value}")
+    try:
+        _ = create_user(data)
+        user_list.refresh()
+    except APIException as e:
+        ui.notify(f"Error: {e}", color="negative")
+
+
+def get_user_list() -> List[Dict]:
+    try:
+        users = read_users()
+        return [
+            dict(
+                id=user.id,
+                full_name=user.full_name,
+                email=user.email,
+                is_active=user.is_active,
+                is_superuser=user.is_superuser,
+            )
+            for user in users.data
+        ]
+    except APIException as e:
+        ui.notify(f"Error: {e}", color="negative")
+        return []
+
+
+def user_edit(e: events.GenericEventArguments):
+    ui.notify(f"EDIT/id:{e.args['id']}")
+    pass
+
+
+def user_delete(e: events.GenericEventArguments):
+    ui.notify(f"DELETE/id:{e.args['id']}")
+    pass
 
 
 @ui.refreshable
 def user_list():
     columns = [
+        {
+            "name": "id",
+            "label": "ID",
+            "field": "id",
+            "classes": "hidden",
+            "headerClasses": "hidden",
+        },
         {
             "name": "fullname",
             "label": "Full name",
@@ -86,20 +130,7 @@ def user_list():
         {"name": "status", "label": "Status", "field": "is_active", "align": "left"},
         {"name": "actions", "label": "Actions", "field": "actions"},
     ]
-    rows = [
-        {
-            "full_name": "Mister Mister",
-            "email": "email@example.com",
-            "is_superuser": True,
-            "is_active": True,
-        },
-        {
-            "full_name": "Some User",
-            "email": "nobody@example.com",
-            "is_superuser": False,
-            "is_active": False,
-        },
-    ]
+    rows = get_user_list()
     table = ui.table(columns=columns, rows=rows, row_key="email").classes("w-full")
     table.add_slot(
         "body-cell-status",
@@ -109,8 +140,45 @@ def user_list():
             </q-badge>
             {{ props.value ? 'Active': 'Inactive'}}
         </q-td>
-    """,
+        """,
     )
+    table.add_slot(
+        "body-cell-actions",
+        r"""
+        <q-td key="name" :props="props" class="q-pa-md" style="max-width: 250px">
+            <q-btn size="sm" round outline icon="more_vert" color="accent">
+            <q-menu>
+                <q-list>
+                    <q-item clickable v-close-popup
+                        @click="$parent.$emit('user_edit', props.row)"
+                    >
+                        <q-item-section>
+                            <q-icon name="edit"/>
+                        </q-item-section>
+                        <q-item-section>
+                            <q-item-label>Edit</q-item-label>
+                        </q-item-section>
+                    </q-item>
+
+                    <q-item clickable v-close-popup 
+                        @click="$parent.$emit('user_delete', props.row)"
+                    >
+                        <q-item-section>
+                            <q-icon name="delete"/>
+                        </q-item-section>
+                        <q-item-section>
+                            <q-item-label>Delete</q-item-label>
+                        </q-item-section>
+                    </q-item>
+
+                </q-list>
+            </q-menu>
+            </q-btn>
+        </q-td>
+        """,
+    )
+    table.on("user_edit", user_edit)
+    table.on("user_delete", user_delete)
 
 
 def content():

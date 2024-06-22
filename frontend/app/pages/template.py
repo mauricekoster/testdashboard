@@ -1,13 +1,16 @@
 from contextlib import contextmanager
 
-from .menu import menu
+from app.components.menu import display_menu
 
 from nicegui import ui, app
+from app.login import current_user
 
 
 @contextmanager
-def mainpage(navigation_title: str, active_menu: str):
+def mainpage(navigation_title: str, menu: dict, active_menu: str):
     """Custom page frame to share the same styling and behavior across all pages"""
+
+    current_user.check()
 
     ui.dark_mode().bind_value(app.storage.user, "dark_mode")
     ui.colors(
@@ -31,7 +34,7 @@ def mainpage(navigation_title: str, active_menu: str):
             )
 
     with ui.left_drawer().classes("bg-blue-100") as left_drawer:
-        menu(active_menu=active_menu)
+        display_menu(menu_definition=menu, active_menu=active_menu)
 
-    with ui.column().classes("w-full").style("margin: 12px"):
+    with ui.column().classes("w-full"):
         yield

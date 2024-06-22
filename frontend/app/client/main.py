@@ -1,5 +1,6 @@
 import requests
 import os
+from nicegui import app
 
 
 class OpenAPI:
@@ -13,22 +14,24 @@ class OpenAPI:
         self.token = ""
         self.session = requests.Session()
 
-    def set_token(self, token: str):
-        self.token = token
-        print("Setting token")
-        if self.token:
-            self.session.headers["Authorization"] = f"Bearer {self.token}"
+    def set_header(self):
+        if app.storage.user.get("authenticated", False):
+            token = app.storage.user.get("access_token")
+            self.session.headers["Authorization"] = f"Bearer {token}"
         else:
-            del self.session.headers["Authorization"]
+            if "Authorization" in self.session.headers:
+                del self.session.headers["Authorization"]
 
     def __str__(self) -> str:
         return f"<OpenAPI: baseurl: {self.base_url}>"
 
     def get(self, url):
+        self.set_header()
         print(self.session.headers)
         return self.session.get(f"{self.base_url}{url}")
 
     def post(self, url, data):
+        self.set_header()
         print(f"posting {url}")
         return self.session.post(f"{self.base_url}{url}", data=data)
 

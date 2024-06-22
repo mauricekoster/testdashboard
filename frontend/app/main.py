@@ -2,45 +2,25 @@
 import os
 from pathlib import Path
 
-from fastapi import Request
-from fastapi.responses import RedirectResponse
-from starlette.middleware.base import BaseHTTPMiddleware
 
-from nicegui import Client, app, ui
+from nicegui import app, ui
 
-from . import dashboard
-from . import admin
 from . import login
-from . import projects
-from . import items
-from . import settings
 
-unrestricted_page_routes = {"/login"}
+from .pages import dashboard
+from .pages import admin
+from .pages import projects
+from .pages import items
+from .pages import settings
 
-
-class AuthMiddleware(BaseHTTPMiddleware):
-    """This middleware restricts access to all NiceGUI pages.
-
-    It redirects the user to the login page if they are not authenticated.
-    """
-
-    async def dispatch(self, request: Request, call_next):
-        if not app.storage.user.get("authenticated", False):
-            if (
-                request.url.path in Client.page_routes.values()
-                and request.url.path not in unrestricted_page_routes
-            ):
-                app.storage.user["referrer_path"] = (
-                    request.url.path
-                )  # remember where the user wanted to go
-                return RedirectResponse("/login")
-        return await call_next(request)
+from .middleware import AuthMiddleware
 
 
 app.add_middleware(AuthMiddleware)
 
 assets_path = Path(__file__).parent / "assets"
-app.add_media_files("/assets", assets_path)
+app.add_static_files("/assets", assets_path)
+# app.add_media_files("/assets", assets_path)
 
 dashboard.init()
 admin.init()
