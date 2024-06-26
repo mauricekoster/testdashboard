@@ -2,32 +2,18 @@
 import os
 from pathlib import Path
 
-
 from nicegui import app, ui
 
-from . import login
+from .pages import router
 
-from .pages import dashboard
-from .pages import admin
-from .pages import projects
-from .pages import items
-from .pages import settings
+from app.core.middleware import AuthMiddleware
 
-from .middleware import AuthMiddleware
-
-
+app.include_router(router)
 app.add_middleware(AuthMiddleware)
 
 assets_path = Path(__file__).parent / "assets"
 app.add_static_files("/assets", assets_path)
 # app.add_media_files("/assets", assets_path)
-
-dashboard.init()
-admin.init()
-login.init()
-projects.init()
-items.init()
-settings.init()
 
 
 def handle_shutdown():

@@ -3,7 +3,7 @@ from contextlib import contextmanager
 from app.components.menu import display_menu
 
 from nicegui import ui, app
-from app.login import current_user
+from app.core.user import current_user
 
 
 @contextmanager

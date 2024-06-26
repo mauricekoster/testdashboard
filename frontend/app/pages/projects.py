@@ -1,14 +1,15 @@
-from nicegui import ui
+from nicegui import ui, APIRouter
 
 from .template import mainpage
 from .menus import main_menu
 
+router = APIRouter()
 
-def init() -> None:
-    @ui.page("/projects")
-    def show_projects():
-        with mainpage("Projects", main_menu, "projects"):
-            content()
+
+@router.page("/projects")
+def show_projects():
+    with mainpage("Projects", main_menu, "projects"):
+        content()
 
 
 columns = [

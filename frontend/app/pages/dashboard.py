@@ -1,15 +1,16 @@
-from nicegui import ui, app
+from nicegui import ui, app, APIRouter
 
 from .template import mainpage
 from .menus import main_menu
-from ..login import current_user
+from app.core.user import current_user
+
+router = APIRouter()
 
 
-def init() -> None:
-    @ui.page("/")
-    def show_dashboard():
-        with mainpage("Dashboard", main_menu, "dashboard"):
-            content()
+@router.page("/")
+def show_dashboard():
+    with mainpage("Dashboard", main_menu, "dashboard"):
+        content()
 
 
 def content() -> None:

@@ -1,4 +1,4 @@
-from nicegui import ui, events
+from nicegui import ui, events, APIRouter
 from typing import List, Dict
 from app.client import APIException
 
@@ -10,11 +10,13 @@ from app.models import UserCreate
 from app.client.users import create_user, read_users
 
 
-def init() -> None:
-    @ui.page("/admin")
-    def show_dashboard():
-        with mainpage("User Management", main_menu, "admin"):
-            content()
+router = APIRouter()
+
+
+@router.page("/admin")
+def show_dashboard():
+    with mainpage("User Management", main_menu, "admin"):
+        content()
 
 
 async def add_user():

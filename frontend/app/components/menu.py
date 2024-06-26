@@ -1,5 +1,5 @@
 from nicegui import ui
-from app.login import current_user
+from app.core.user import current_user
 
 
 def menu_item(text, target, icon, is_active=False):
