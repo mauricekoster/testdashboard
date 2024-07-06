@@ -35,13 +35,15 @@ class OpenAPI:
         print(f"posting {url}")
         return self.session.post(f"{self.base_url}{url}", data=data)
 
+    def patch(self, url, data):
+        self.set_header()
+        print(f"patching {url}")
+        return self.session.patch(f"{self.base_url}{url}", data=data)
+
+    def delete(self, url):
+        self.set_header()
+        print(f"deleting {url}")
+        return self.session.delete(f"{self.base_url}{url}")
+
 
 openapi = OpenAPI()
-
-
-def clear_token() -> None:
-    openapi.set_token("")
-
-
-def set_token(token: str) -> None:
-    openapi.set_token(token)

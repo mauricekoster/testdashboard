@@ -1,14 +1,15 @@
-from nicegui import ui, events, APIRouter
+from nicegui import ui, APIRouter
 from typing import List, Dict
+from functools import partial
+
 from app.client import APIException
 
-from .template import mainpage
+from app.pages.template import mainpage
 from app.components.main import heading, navbar
-from .menus import main_menu
+from app.pages.menus import main_menu
 
-from app.models import UserCreate
-from app.client.users import create_user, read_users
-
+from app.client.users import read_users
+from .admin_user import user_add, user_edit, user_delete
 
 router = APIRouter()
 
@@ -17,58 +18,6 @@ router = APIRouter()
 def show_dashboard():
     with mainpage("User Management", main_menu, "admin"):
         content()
-
-
-async def add_user():
-    with ui.dialog() as add_user_dialog, ui.card().style("width: 50%;"):
-        with ui.card_section().classes("w-full"):
-            with ui.row():
-                ui.label("Add User").classes("text-h6")
-                ui.space()
-                ui.button(
-                    icon="close",
-                    on_click=lambda: add_user_dialog.submit("Cancel"),
-                ).props("round flat dense")
-
-        with ui.card_section().classes("w-full"):
-            email = ui.input("Email")
-            full_name = ui.input("Full name")
-            set_password = ui.input("Set password", password=True)
-            confirm_password = ui.input(
-                "Confirm password",
-                password=True,
-                validation={
-                    "Password not same": lambda value: value == set_password.value
-                },
-            )
-            with ui.row().classes("w-full"):
-                is_superuser = ui.checkbox("Is superuser?")
-                is_active = ui.checkbox("Is active?", value=True)
-
-        with ui.card_actions().classes("w-full").props("align=right"):
-            ui.button("Save", on_click=lambda: add_user_dialog.submit("Save"))
-            ui.button(
-                "Cancel",
-                color="secondary",
-                on_click=lambda: add_user_dialog.submit("Cancel"),
-            )
-
-    result = await add_user_dialog
-    if result == "Cancel":
-        return
-
-    data = UserCreate(
-        email=email.value,
-        full_name=full_name.value,
-        password=set_password.value,
-        is_active=is_active.value,
-        is_superuser=is_superuser.value,
-    )
-    try:
-        _ = create_user(data)
-        user_list.refresh()
-    except APIException as e:
-        ui.notify(f"Error: {e}", color="negative")
 
 
 def get_user_list() -> List[Dict]:
@@ -87,16 +36,6 @@ def get_user_list() -> List[Dict]:
     except APIException as e:
         ui.notify(f"Error: {e}", color="negative")
         return []
-
-
-def user_edit(e: events.GenericEventArguments):
-    ui.notify(f"EDIT/id:{e.args['id']}")
-    pass
-
-
-def user_delete(e: events.GenericEventArguments):
-    ui.notify(f"DELETE/id:{e.args['id']}")
-    pass
 
 
 @ui.refreshable
@@ -179,12 +118,14 @@ def user_list():
         </q-td>
         """,
     )
-    table.on("user_edit", user_edit)
-    table.on("user_delete", user_delete)
+    table.on("user_edit", partial(user_edit, user_list))
+    table.on("user_delete", partial(user_delete, user_list))
 
 
 def content():
     heading("User Management", 4)
     with navbar():
-        ui.button("Add User", icon="add_box", on_click=add_user).props("no-caps")
+        ui.button(
+            "Add User", icon="add_box", on_click=partial(user_add, user_list)
+        ).props("outline no-caps")
     user_list()
