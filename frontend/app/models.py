@@ -30,6 +30,11 @@ class UserPublic(UserBase):
     id: int
 
 
+class UserUpdateMe(BaseModel):
+    full_name: str
+    email: str
+
+
 class UsersPublic(BaseModel):
     data: list[UserPublic]
     count: int

@@ -5,7 +5,9 @@ from functools import partial
 from app.client import APIException
 
 from app.pages.template import mainpage
-from app.components.main import heading, navbar
+from app.components.main import navbar
+from app.components.common import Heading
+
 from app.pages.menus import main_menu
 
 from app.client.users import read_users
@@ -123,7 +125,7 @@ def user_list():
 
 
 def content():
-    heading("User Management", 4)
+    Heading("User Management")
     with navbar():
         ui.button(
             "Add User", icon="add_box", on_click=partial(user_add, user_list)

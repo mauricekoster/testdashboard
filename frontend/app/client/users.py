@@ -1,5 +1,12 @@
 from .main import openapi
-from app.models import Message, UserCreate, UserPublic, UserUpdate, UsersPublic
+from app.models import (
+    Message,
+    UserCreate,
+    UserPublic,
+    UserUpdate,
+    UserUpdateMe,
+    UsersPublic,
+)
 from . import APIException
 
 
@@ -54,5 +61,15 @@ def read_user_me() -> UserPublic:
     if response.status_code == 200:
         user = UserPublic.model_validate_json(response.content)
         return user
+    else:
+        raise APIException(f'API: {response.json()["detail"]}')
+
+
+def update_user_me(user: UserUpdateMe) -> UserPublic:
+    response = openapi.patch(
+        "/api/v1/users/me", data=user.model_dump_json(exclude_none=True)
+    )
+    if response.status_code == 200:
+        return UserPublic.model_validate_json(response.content)
     else:
         raise APIException(f'API: {response.json()["detail"]}')
