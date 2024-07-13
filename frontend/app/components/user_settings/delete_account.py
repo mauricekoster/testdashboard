@@ -1,6 +1,7 @@
 from nicegui import ui
+from app.components.common import Heading
 
 
 class DeleteAccount:
     def __init__(self):
-        ui.label("Delete account")
+        Heading("Delete account", size="sm")

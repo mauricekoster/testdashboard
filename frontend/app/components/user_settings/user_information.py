@@ -1,19 +1,19 @@
 from nicegui import ui
 from app import components
-from app.components.common import Flex, Heading
+from app.components.common import Flex, Heading, FormLabel
 from app.client.users import read_user_me, update_user_me
 from app.models import UserUpdateMe
 
 
 @ui.refreshable
 def user_form(component):
-    ui.label("Full name:").classes("text-bold")
+    FormLabel("Full name")
     if component.edit_mode:
         ui.input(placeholder="Full name").bind_value(component, "full_name")
     else:
         ui.label().bind_text(component, "full_name")
 
-    ui.label("Email:").classes("text-bold")
+    FormLabel("Email")
     if component.edit_mode:
         ui.input(placeholder="Email").bind_value(component, "email")
     else:
