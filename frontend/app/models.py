@@ -1,6 +1,10 @@
 from pydantic import BaseModel
 
 
+class APIError(BaseModel):
+    detail: str
+
+
 class Token(BaseModel):
     access_token: str
     token_type: str
@@ -33,6 +37,11 @@ class UserPublic(UserBase):
 class UserUpdateMe(BaseModel):
     full_name: str
     email: str
+
+
+class UpdatePassword(BaseModel):
+    current_password: str
+    new_password: str
 
 
 class UsersPublic(BaseModel):

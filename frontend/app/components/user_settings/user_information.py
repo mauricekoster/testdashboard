@@ -1,5 +1,4 @@
 from nicegui import ui
-from app import components
 from app.components.common import Flex, Heading, FormLabel
 from app.client.users import read_user_me, update_user_me
 from app.models import UserUpdateMe

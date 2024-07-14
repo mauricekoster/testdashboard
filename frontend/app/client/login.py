@@ -1,5 +1,5 @@
 from .main import openapi
-from app.models import Token
+from app.models import Token, APIError
 from . import APIException
 
 
@@ -13,4 +13,4 @@ def login_access_token(username, password) -> Token:
         return token
 
     else:
-        raise APIException(f'API: {response.json()["detail"]}')
+        raise APIException(APIError.model_validate_json(response.content))

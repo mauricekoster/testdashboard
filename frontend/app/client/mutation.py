@@ -9,6 +9,9 @@ class Mutation:
         self.on_success = on_success
         self.on_error = on_error
 
+    def __call__(self, data):
+        self.mutate(data)
+
     def mutate(self, data):
         try:
             self.mutation_fn(data)
@@ -17,6 +20,6 @@ class Mutation:
 
         except APIException as exp:
             if self.on_error:
-                self.on_error(exp)
+                self.on_error(exp.args[0])
             else:
                 raise exp

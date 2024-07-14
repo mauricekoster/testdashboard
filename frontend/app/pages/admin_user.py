@@ -1,5 +1,7 @@
 from nicegui import ui, events
 
+from app.client import mutation
+from app.client.mutation import Mutation
 from app.models import UserCreate, UserUpdate
 from app.client import APIException
 from app.client.users import create_user, delete_user, get_user_by_id, update_user
@@ -21,11 +23,13 @@ async def user_add(user_list):
     if result == "Cancel":
         return
 
-    try:
-        _ = create_user(data)
-        user_list.refresh()
-    except APIException as e:
-        ui.notify(f"Error: {e}", color="negative")
+    Mutation(
+        mutation_fn=lambda data: create_user(data),
+        on_success=lambda: user_list.refresh(),
+        on_error=lambda err: ui.notify(
+            f"Something went wrong: {err.detail}", type="negative"
+        ),
+    )(data)
 
 
 async def user_edit(user_list, e: events.GenericEventArguments):

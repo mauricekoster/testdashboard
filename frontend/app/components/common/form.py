@@ -1,14 +1,16 @@
 from contextlib import contextmanager
+
+from nicegui.element import Element
 from .typography import Text
 from typing_extensions import Self, Callable
 from nicegui import ui
 
 
 class Form:
-    def __init__(self, parent, on_submit: Callable | None = None) -> None:
-        self.parent = parent
+    def __init__(self, model=None, on_submit: Callable | None = None) -> None:
+        self.model = model
         self.on_submit = on_submit
-        self.elements = []
+        self.elements = {}
 
     def __enter__(self) -> Self:
         return self
@@ -16,25 +18,40 @@ class Form:
     def __exit__(self, *_) -> None:
         pass
 
-    def register(self, name, element=None):
-        self.elements.append(dict(name=name, element=element))
+    def get_value(self, name):
+        return getattr(self.model, name).value
+
+    def get_values(self):
+        d = {}
+        for k, v in self.elements.items():
+            d[k] = v.value
+        return d
+
+    def register(self, name, element: Element):
+        self.elements[name] = element
+        element.bind_value(self.model, name)
+        setattr(self, name, element)
 
     def submit(self):
         if self.on_submit:
             data = {}
             all_valid = True
-            for element in self.elements:
-                name = element["name"]
-                elem = element["element"]
+            for k, v in self.elements.items():
+                name = k
+                elem = v
                 if elem:
                     valid = elem.validate()
+                    print(f"{name} valid: {valid}")
                     data[name] = elem.value
                 else:
                     valid = True
-                    data[name] = getattr(self.parent, name)
+                    data[name] = getattr(self.model, name)
                 all_valid = all_valid and valid
 
-            self.on_submit(data)
+            if all_valid:
+                self.on_submit(data)
+            else:
+                ui.notify("Validation errors!", type="warning")
 
 
 class FormLabel(Text):
@@ -47,13 +64,15 @@ class FormLabel(Text):
 
 class Input:
     def __init__(
-        self, form: Form, id: str, placeholder: str | None = None, type: str = "text"
+        self,
+        form: Form,
+        id: str,
+        placeholder: str | None = None,
+        type: str = "text",
+        validation: dict | None = None,
     ) -> None:
-        self.form = form
-        self.id = id
-        self.value = ""
         passwrd = type == "password"
-        self.element = ui.input(placeholder=placeholder, password=passwrd).bind_value(
-            self, "value"
+        form.register(
+            id,
+            ui.input(placeholder=placeholder, password=passwrd, validation=validation),
         )
-        form.register(self.id, self.element)

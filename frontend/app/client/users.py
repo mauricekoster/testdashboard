@@ -1,6 +1,8 @@
 from .main import openapi
 from app.models import (
+    APIError,
     Message,
+    UpdatePassword,
     UserCreate,
     UserPublic,
     UserUpdate,
@@ -15,7 +17,7 @@ def read_users(skip: int = 0, limit: int = 100) -> UsersPublic:
     if response.status_code == 200:
         return UsersPublic.model_validate_json(response.content)
     else:
-        raise APIException(f'API: {response.json()["detail"]}')
+        raise APIException(APIError.model_validate_json(response.content))
 
 
 def create_user(userdata: UserCreate) -> UserPublic:
@@ -24,7 +26,7 @@ def create_user(userdata: UserCreate) -> UserPublic:
         user = UserPublic.model_validate_json(response.content)
         return user
     else:
-        raise APIException(f'API: {response.json()["detail"]}')
+        raise APIException(APIError.model_validate_json(response.content))
 
 
 def get_user_by_id(user_id: int) -> UserPublic:
@@ -33,7 +35,7 @@ def get_user_by_id(user_id: int) -> UserPublic:
         user = UserPublic.model_validate_json(response.content)
         return user
     else:
-        raise APIException(f'API: {response.json()["detail"]}')
+        raise APIException(APIError.model_validate_json(response.content))
 
 
 def update_user(user_id: int, data: UserUpdate) -> UserPublic:
@@ -44,7 +46,7 @@ def update_user(user_id: int, data: UserUpdate) -> UserPublic:
         user = UserPublic.model_validate_json(response.content)
         return user
     else:
-        raise APIException(f'API: {response.json()["detail"]}')
+        raise APIException(APIError.model_validate_json(response.content))
 
 
 def delete_user(user_id: int) -> Message:
@@ -53,7 +55,7 @@ def delete_user(user_id: int) -> Message:
         message = Message.model_validate_json(response.content)
         return message
     else:
-        raise APIException(f'API: {response.json()["detail"]}')
+        raise APIException(APIError.model_validate_json(response.content))
 
 
 def read_user_me() -> UserPublic:
@@ -62,7 +64,7 @@ def read_user_me() -> UserPublic:
         user = UserPublic.model_validate_json(response.content)
         return user
     else:
-        raise APIException(f'API: {response.json()["detail"]}')
+        raise APIException(APIError.model_validate_json(response.content))
 
 
 def update_user_me(user: UserUpdateMe) -> UserPublic:
@@ -72,4 +74,14 @@ def update_user_me(user: UserUpdateMe) -> UserPublic:
     if response.status_code == 200:
         return UserPublic.model_validate_json(response.content)
     else:
-        raise APIException(f'API: {response.json()["detail"]}')
+        raise APIException(APIError.model_validate_json(response.content))
+
+
+def update_password_me(data: UpdatePassword) -> Message:
+    response = openapi.patch(
+        "/api/v1/users/me/password", data=data.model_dump_json(exclude_none=True)
+    )
+    if response.status_code == 200:
+        return Message.model_validate_json(response.content)
+    else:
+        raise APIException(APIError.model_validate_json(response.content))
