@@ -13,3 +13,6 @@ jobs:
         run: |
           docker login --username mauricekoster --password ${{ secrets.GH_TOKEN }} ghcr.io
           docker build backend/ -t ghrc.io/mauricekoster/testdashboard-backend:latest
+          docker build frontend/ -t ghrc.io/mauricekoster/testdashboard-frontend:latest
+          docker push ghrc.io/mauricekoster/testdashboard-backend:latest
+          docker push ghrc.io/mauricekoster/testdashboard-frontend:latest
