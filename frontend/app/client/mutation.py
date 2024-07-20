@@ -9,12 +9,12 @@ class Mutation:
         self.on_success = on_success
         self.on_error = on_error
 
-    def __call__(self, data):
-        self.mutate(data)
+    def __call__(self, *data):
+        self.mutate(*data)
 
-    def mutate(self, data):
+    def mutate(self, *data):
         try:
-            self.mutation_fn(data)
+            self.mutation_fn(*data)
             if self.on_success:
                 self.on_success()
 

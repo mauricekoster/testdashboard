@@ -6,9 +6,7 @@ from app.client.users import update_password_me
 from functools import partial
 
 
-def confirm_password_rules(get_values, value):
-    values = get_values()
-    return values["new_password"] == values["confirm_password"]
+from app.core.utils.validations import confirm_password_rules
 
 
 class UpdatePasswordForm(UpdatePassword):

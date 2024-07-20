@@ -77,6 +77,14 @@ def update_user_me(user: UserUpdateMe) -> UserPublic:
         raise APIException(APIError.model_validate_json(response.content))
 
 
+def delete_user_me() -> Message:
+    response = openapi.delete("/api/v1/users/me")
+    if response.status_code == 200:
+        return Message.model_validate_json(response.content)
+    else:
+        raise APIException(APIError.model_validate_json(response.content))
+
+
 def update_password_me(data: UpdatePassword) -> Message:
     response = openapi.patch(
         "/api/v1/users/me/password", data=data.model_dump_json(exclude_none=True)

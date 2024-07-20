@@ -32,22 +32,25 @@ class Form:
         element.bind_value(self.model, name)
         setattr(self, name, element)
 
+    def validate(self):
+        data = {}
+        all_valid = True
+        for k, v in self.elements.items():
+            name = k
+            elem = v
+            if elem:
+                valid = elem.validate()
+                print(f"{name} valid: {valid}")
+                data[name] = elem.value
+            else:
+                valid = True
+                data[name] = getattr(self.model, name)
+            all_valid = all_valid and valid
+        return all_valid, data
+
     def submit(self):
         if self.on_submit:
-            data = {}
-            all_valid = True
-            for k, v in self.elements.items():
-                name = k
-                elem = v
-                if elem:
-                    valid = elem.validate()
-                    print(f"{name} valid: {valid}")
-                    data[name] = elem.value
-                else:
-                    valid = True
-                    data[name] = getattr(self.model, name)
-                all_valid = all_valid and valid
-
+            all_valid, data = self.validate()
             if all_valid:
                 self.on_submit(data)
             else:
@@ -76,3 +79,8 @@ class Input:
             id,
             ui.input(placeholder=placeholder, password=passwrd, validation=validation),
         )
+
+
+class Checkbox:
+    def __init__(self, form: Form, id, label: str, default: bool = False):
+        form.register(id, ui.checkbox(label, value=default))

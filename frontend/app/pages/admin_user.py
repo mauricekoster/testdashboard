@@ -9,29 +9,6 @@ from app.client.users import create_user, delete_user, get_user_by_id, update_us
 from .dialogs import user_dialog, alert_dialog
 
 
-async def user_add(user_list):
-    data = UserCreate(
-        email="",
-        full_name="",
-        password="",
-        is_active=True,
-        is_superuser=False,
-    )
-
-    result = await user_dialog("Add user", data)
-    print(data)
-    if result == "Cancel":
-        return
-
-    Mutation(
-        mutation_fn=lambda data: create_user(data),
-        on_success=lambda: user_list.refresh(),
-        on_error=lambda err: ui.notify(
-            f"Something went wrong: {err.detail}", type="negative"
-        ),
-    )(data)
-
-
 async def user_edit(user_list, e: events.GenericEventArguments):
     user_id = int(e.args["id"])
     user = get_user_by_id(user_id)

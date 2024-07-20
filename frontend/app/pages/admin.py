@@ -4,6 +4,7 @@ from functools import partial
 
 from app.client import APIException
 
+from app.components.admin.add_user import AddUser
 from app.pages.template import mainpage
 from app.components.main import navbar
 from app.components.common import Heading
@@ -127,7 +128,12 @@ def user_list():
 def content():
     Heading("User Management")
     with navbar():
-        ui.button(
-            "Add User", icon="add_box", on_click=partial(user_add, user_list)
-        ).props("outline no-caps")
+        ui.button("Add User", icon="add_box", on_click=on_handle_add).props(
+            "outline no-caps"
+        )
     user_list()
+
+
+async def on_handle_add():
+    add_user_dialog = AddUser(user_list)
+    await add_user_dialog.show()
