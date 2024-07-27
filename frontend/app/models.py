@@ -16,7 +16,7 @@ class Message(BaseModel):
 
 class UserBase(BaseModel):
     email: str
-    full_name: str
+    full_name: str | None
     is_active: bool
     is_superuser: bool
 
