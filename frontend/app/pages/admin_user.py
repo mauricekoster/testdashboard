@@ -1,10 +1,8 @@
 from nicegui import ui, events
 
-from app.client import mutation
-from app.client.mutation import Mutation
-from app.models import UserCreate, UserUpdate
+from app.models import UserUpdate
 from app.client import APIException
-from app.client.users import create_user, delete_user, get_user_by_id, update_user
+from app.client.users import delete_user, get_user_by_id, update_user
 
 from .dialogs import user_dialog, alert_dialog
 

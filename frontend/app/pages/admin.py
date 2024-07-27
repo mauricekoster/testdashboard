@@ -12,7 +12,7 @@ from app.components.common import Heading
 from app.pages.menus import main_menu
 
 from app.client.users import read_users
-from .admin_user import user_add, user_edit, user_delete
+from .admin_user import user_edit, user_delete
 
 router = APIRouter()
 
