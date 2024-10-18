@@ -75,6 +75,19 @@ services:
         - BACKEND_API_URL=http://backend
     command: /start-reload.sh
 
+
+  frontendng:
+    restart: "no"
+    ports:
+      - "9000:80"
+    volumes:
+      - ./frontend-htmx/:/app
+    build:
+      context: ./frontend-htmx
+      args:
+        - BACKEND_API_URL=http://backend
+    command: /start-reload.sh
+
 networks:
   traefik-public:
     # For local dev, don't expect an external Traefik network
