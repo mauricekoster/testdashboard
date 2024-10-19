@@ -2,7 +2,18 @@
 module.exports = {
   content: ["./app/templates/**/*.html"],
   theme: {
-    extend: {},
+    
+    extend: {
+      colors: {
+        primary: {
+          DEFAULT: '#5E81AC',
+        }
+      },
+      brightness: ['hover'],
+      fontFamily: {
+        roboto: ['Roboto', 'sans-serif'],
+      },
+    },
   },
   plugins: [],
 }
