@@ -4,6 +4,10 @@ services:
     restart: always
     volumes:
       - app-db-data:/var/lib/postgresql/data/pgdata
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G
     env_file:
       - .env
     environment:
@@ -22,6 +26,10 @@ services:
       - db
     environment:
       - ADMINER_DESIGN=pepa-linha-dark
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G
     labels:
       - traefik.enable=true
       - traefik.docker.network=traefik-public
@@ -67,6 +75,10 @@ services:
       context: ./backend
       args:
         INSTALL_DEV: ${INSTALL_DEV-false}
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G
     platform: linux/amd64 # Patch for M1 Mac
     labels:
       - traefik.enable=true
@@ -102,6 +114,10 @@ services:
       context: ./frontend
       args:
         - BACKEND_API_URL=https://${DOMAIN?Variable not set}/api/v1
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G
     depends_on:
       - backend
     labels:
@@ -135,6 +151,10 @@ services:
         - BACKEND_API_URL=https://${DOMAIN?Variable not set}/api/v1
     depends_on:
       - backend
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G
     labels:
       - traefik.enable=true
       - traefik.docker.network=traefik-public
