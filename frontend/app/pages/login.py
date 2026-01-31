@@ -28,7 +28,8 @@ def login() -> Optional[RedirectResponse]:
             print(current_user)
 
             ui.navigate.to(
-                app.storage.user.get("referrer_path", "/")
+                #app.storage.user.get("referrer_path", "/")
+                "/projects"
             )  # go back to where the user wanted to go
         except APIException as e:
             ui.notify(e, color="negative")

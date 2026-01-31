@@ -7,6 +7,7 @@ from nicegui import app, ui
 from .pages import router
 
 from app.core.middleware import AuthMiddleware
+from app.core.config import settings
 
 app.include_router(router)
 app.add_middleware(AuthMiddleware)
@@ -23,6 +24,6 @@ def handle_shutdown():
 app.on_shutdown(handle_shutdown)
 ui.run_with(
     app,
-    title="Test Dashboard",
-    storage_secret=os.environ.get("STORAGE_SECRET", "very very secret"),
+    title=settings.PROJECT_NAME,
+    storage_secret=settings.STORAGE_SECRET,
 )

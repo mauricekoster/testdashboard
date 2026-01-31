@@ -158,8 +158,9 @@ services:
     build:
       context: .
       dockerfile: frontend/Dockerfile
-      args:
-        - BACKEND_API_URL=https://${DOMAIN?Variable not set}
+   
+    env_file:
+      - .env
     deploy:
       resources:
         limits:

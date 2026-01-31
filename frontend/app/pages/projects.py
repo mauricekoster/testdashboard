@@ -1,6 +1,6 @@
 from nicegui import ui, APIRouter
 
-from .template import mainpage
+from .templates.landing import landingpage
 from .menus import main_menu
 
 router = APIRouter()
@@ -8,7 +8,7 @@ router = APIRouter()
 
 @router.page("/projects")
 def show_projects():
-    with mainpage("Projects", main_menu, "projects"):
+    with landingpage("Projects", main_menu, "projects"):
         content()
 
 
@@ -29,8 +29,11 @@ projects = [
 
 
 def content() -> None:
-    ui.label("Projects here...")
-    ui.button("Create project")
+    with ui.row().classes("w-full"):
+        ui.label("Projects").classes("text-h4")
+        ui.space()
+        ui.button("Manage projects", color="primary")
+
     ui.separator()
     with ui.column().classes("w-full"):
         # with ui.card().style("width: 100%").tight():

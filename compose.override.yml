@@ -103,6 +103,12 @@ services:
     build:
       context: .
       dockerfile: frontend/Dockerfile
+    command:
+      - uvicorn
+      - --host
+      - "0.0.0.0"
+      - --reload
+      - "app.main:app"
     environment:
       - BACKEND_API_URL=http://backend:8000
   #  command: /start-reload.sh
