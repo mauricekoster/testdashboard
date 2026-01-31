@@ -12,7 +12,7 @@ jobs:
       - name: Build and publish
         run: |
           docker login --username mauricekoster --password ${{ secrets.GH_TOKEN }} ghcr.io
-          docker build backend/ -t ghcr.io/mauricekoster/testdashboard-backend:latest
-          docker build frontend/ -t ghcr.io/mauricekoster/testdashboard-frontend:latest
+          docker build -f backend/Dockerfile . -t ghcr.io/mauricekoster/testdashboard-backend:latest
+          docker build -f frontend/Dockerfile . -t ghcr.io/mauricekoster/testdashboard-frontend:latest
           docker push ghcr.io/mauricekoster/testdashboard-backend:latest
           docker push ghcr.io/mauricekoster/testdashboard-frontend:latest
