@@ -1,7 +1,13 @@
 services:
   db:
-    image: postgres:12
+    image: postgres:18
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
     volumes:
       - app-db-data:/var/lib/postgresql/data/pgdata
     deploy:
@@ -25,7 +31,8 @@ services:
     depends_on:
       - db
     environment:
-      - ADMINER_DESIGN=pepa-linha-dark
+      #- ADMINER_DESIGN=pepa-linha-dark
+      - ADMINER_DESIGN=galkaev
     deploy:
       resources:
         limits:
@@ -43,6 +50,39 @@ services:
       - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-https.tls.certresolver=le
       - traefik.http.services.${STACK_NAME?Variable not set}-adminer.loadbalancer.server.port=8080
 
+  prestart:
+    image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    networks:
+      - traefik-public
+      - default
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+    command: bash scripts/prestart.sh
+    env_file:
+      - .env
+    environment:
+      - DOMAIN=${DOMAIN}
+      #- FRONTEND_HOST=${FRONTEND_HOST?Variable not set}
+      - ENVIRONMENT=${ENVIRONMENT}
+      - BACKEND_CORS_ORIGINS=${BACKEND_CORS_ORIGINS}
+      - SECRET_KEY=${SECRET_KEY?Variable not set}
+      - FIRST_SUPERUSER=${FIRST_SUPERUSER?Variable not set}
+      - FIRST_SUPERUSER_PASSWORD=${FIRST_SUPERUSER_PASSWORD?Variable not set}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - EMAILS_FROM_EMAIL=${EMAILS_FROM_EMAIL}
+      - POSTGRES_SERVER=db
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER?Variable not set}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
+
   backend:
     image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
     restart: always
@@ -50,7 +90,11 @@ services:
       - traefik-public
       - default
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+        restart: true
+      prestart:
+        condition: service_completed_successfully
     env_file:
       - .env
     environment:
@@ -72,7 +116,8 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
 
     build:
-      context: ./backend
+      context: .
+      dockerfile: backend/Dockerfile
       args:
         INSTALL_DEV: ${INSTALL_DEV-false}
     deploy:
@@ -111,9 +156,10 @@ services:
       - traefik-public
       - default
     build:
-      context: ./frontend
+      context: .
+      dockerfile: frontend/Dockerfile
       args:
-        - BACKEND_API_URL=https://${DOMAIN?Variable not set}/api/v1
+        - BACKEND_API_URL=https://${DOMAIN?Variable not set}
     deploy:
       resources:
         limits:
@@ -124,12 +170,9 @@ services:
       - traefik.enable=true
       - traefik.docker.network=traefik-public
       - traefik.constraint-label=traefik-public
-
       - traefik.http.services.${STACK_NAME?Variable not set}-frontend.loadbalancer.server.port=80
-
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.rule=Host(`${DOMAIN?Variable not set}`)
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.entrypoints=http
-
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https.rule=Host(`${DOMAIN?Variable not set}`)
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https.entrypoints=https
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https.tls=true
@@ -139,40 +182,41 @@ services:
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-https.middlewares=${STACK_NAME?Variable not set}-www-redirect
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.middlewares=https-redirect,${STACK_NAME?Variable not set}-www-redirect
 
-  frontendng:
-    image: '${DOCKER_IMAGE_FRONTEND_NG?Variable not set}:${TAG-latest}'
-    restart: always
-    networks:
-      - traefik-public
-      - default
-    build:
-      context: ./frontend-htmx
-      args:
-        - BACKEND_API_URL=https://${DOMAIN?Variable not set}/api/v1
-    depends_on:
-      - backend
-    deploy:
-      resources:
-        limits:
-          memory: 1.5G
-    labels:
-      - traefik.enable=true
-      - traefik.docker.network=traefik-public
-      - traefik.constraint-label=traefik-public
+  # frontendng:
+  #   image: '${DOCKER_IMAGE_FRONTEND_NG?Variable not set}:${TAG-latest}'
+  #   restart: always
+  #   networks:
+  #     - traefik-public
+  #     - default
+  #   build:
+  #     context: ./frontend-rx
+  #     args:
+  #       - BACKEND_API_URL=https://${DOMAIN?Variable not set}/api/v1
+  #   depends_on:
+  #     - backend
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 1.5G
+  #   labels:
+  #     - traefik.enable=true
+  #     - traefik.docker.network=traefik-public
+  #     - traefik.constraint-label=traefik-public
 
-      - traefik.http.services.${STACK_NAME?Variable not set}-ng-frontend.loadbalancer.server.port=80
+  #     - traefik.http.services.${STACK_NAME?Variable not set}-ng-frontend.loadbalancer.server.port=80
 
-      - traefik.http.routers.${STACK_NAME?Variable not set}-ng-frontend-http.rule=Host(`ng.${DOMAIN?Variable not set}`)
-      - traefik.http.routers.${STACK_NAME?Variable not set}-ng-frontend-http.entrypoints=http
+  #     - traefik.http.routers.${STACK_NAME?Variable not set}-ng-frontend-http.rule=Host(`ng.${DOMAIN?Variable not set}`)
+  #     - traefik.http.routers.${STACK_NAME?Variable not set}-ng-frontend-http.entrypoints=http
 
-      - traefik.http.routers.${STACK_NAME?Variable not set}-ng-frontend-https.rule=Host(`ng.${DOMAIN?Variable not set}`)
-      - traefik.http.routers.${STACK_NAME?Variable not set}-ng-frontend-https.entrypoints=https
-      - traefik.http.routers.${STACK_NAME?Variable not set}-ng-frontend-https.tls=true
-      - traefik.http.routers.${STACK_NAME?Variable not set}-ng-frontend-https.tls.certresolver=le
+  #     - traefik.http.routers.${STACK_NAME?Variable not set}-ng-frontend-https.rule=Host(`ng.${DOMAIN?Variable not set}`)
+  #     - traefik.http.routers.${STACK_NAME?Variable not set}-ng-frontend-https.entrypoints=https
+  #     - traefik.http.routers.${STACK_NAME?Variable not set}-ng-frontend-https.tls=true
+  #     - traefik.http.routers.${STACK_NAME?Variable not set}-ng-frontend-https.tls.certresolver=le
 
-      # Enable www redirection for HTTP and HTTPS
-      - traefik.http.routers.${STACK_NAME?Variable not set}-ng-frontend-https.middlewares=${STACK_NAME?Variable not set}-www-redirect
-      - traefik.http.routers.${STACK_NAME?Variable not set}-ng-frontend-http.middlewares=https-redirect,${STACK_NAME?Variable not set}-www-redirect
+  #     # Enable www redirection for HTTP and HTTPS
+  #     - traefik.http.routers.${STACK_NAME?Variable not set}-ng-frontend-https.middlewares=${STACK_NAME?Variable not set}-www-redirect
+  #     - traefik.http.routers.${STACK_NAME?Variable not set}-ng-frontend-http.middlewares=https-redirect,${STACK_NAME?Variable not set}-www-redirect
+
 volumes:
   app-db-data:
 
