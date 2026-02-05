@@ -13,10 +13,6 @@ class Dialog:
         for name, _, callback in self.buttons:
             self._callbacks[name] = callback
 
-    async def _handle_submit(self):
-        pass
-
-    async def show(self):
         with ui.dialog() as self._dialog, ui.card().style("width: 50%;"):
             with ui.card_section().classes("w-full"):
                 with ui.row():
@@ -39,6 +35,11 @@ class Dialog:
                         name, color=color, on_click=partial(self._dialog.submit, name)
                     )
 
+
+    async def _handle_submit(self):
+        pass
+
+    async def show(self):
         answer = await self._dialog
         print(f"ANSWER: {answer}")
         callback = self._callbacks.get(answer, None)

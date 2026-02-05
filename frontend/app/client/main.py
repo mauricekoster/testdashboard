@@ -2,6 +2,13 @@ import requests
 import os
 from nicegui import app
 
+from . import APIException
+
+import logging
+
+log = logging.getLogger('TRS')
+logging.basicConfig(level=logging.INFO)
+
 
 class OpenAPI:
     base_url = ""
@@ -47,3 +54,22 @@ class OpenAPI:
 
 
 openapi = OpenAPI()
+
+def get_generic(url):
+    response = openapi.get(url)
+    if response.status_code == 200:
+        result = response.json()
+        return result
+
+    else:
+        raise APIException(f"get_generic: {response.json()}")
+
+
+def post_generic(url, data):
+    response = openapi.post(url, data=data)
+    if response.status_code == 200:
+        result = response.json()
+        return result
+
+    else:
+        raise APIException(f"get_generic: {response.json()}")

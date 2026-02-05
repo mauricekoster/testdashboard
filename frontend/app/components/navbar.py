@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 from nicegui import ui
+from contextlib import contextmanager
+
 
 @dataclass
 class NavBarItem:
@@ -23,3 +25,10 @@ class NavBar():
     def __init__(self, narbar_items: list[NavBarItem], active_item: str):
         for item in narbar_items:
             item(active_item)
+
+
+@contextmanager
+def navbar():
+    with ui.card().classes("w-full").tight():
+        with ui.card_actions():
+            yield
