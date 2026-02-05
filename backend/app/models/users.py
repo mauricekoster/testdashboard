@@ -44,7 +44,6 @@ class UpdatePassword(SQLModel):
 class User(UserBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
     hashed_password: str
-    items: list["Item"] = Relationship(back_populates="owner")
 
 
 # Properties to return via API, id is always required
