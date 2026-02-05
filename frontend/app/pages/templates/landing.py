@@ -1,14 +1,21 @@
 from contextlib import contextmanager
 
-from app.components.menu import display_menu
+from app.components.menu import UserDropdownMenu
 from app.core.config import settings
 
 from nicegui import ui, app
 from app.core.user import current_user
+from app.components.navbar import NavBar, NavBarItem
+
+
+nav_items = [
+    NavBarItem("projects", "Projects", "/projects"),
+    NavBarItem("mywork", "My Work", "/mywork")
+]
 
 
 @contextmanager
-def landingpage(navigation_title: str, menu: dict, active_menu: str):
+def landingpage(active_menu: str):
     """Custom page frame to share the same styling and behavior across all pages"""
 
     current_user.check()
@@ -23,25 +30,16 @@ def landingpage(navigation_title: str, menu: dict, active_menu: str):
         )
         ui.label(settings.PROJECT_NAME).classes("font-bold mr-5")
         
-        ui.button("Projects").props(
-            "outline rounded no-caps color=secundary"
-        ).classes("mx-1")
-        ui.button("My Work").props(
-            "outline rounded no-caps color=accent"
-        ).classes("mx-1")
+        NavBar(nav_items, active_menu)
 
         ui.space()
-        ui.button(icon="settings").props(
-            "flat color=white"
-        )
-        with ui.dropdown_button(
-            app.storage.user["username"], icon="account_circle", auto_close=True
-        ).props("rounded no-caps").classes("q-ma-sm"):
-            ui.item("My profile", on_click=lambda: ui.navigate.to("/settings"))
-            ui.item("Log out", on_click=lambda: ui.navigate.to("/logout"))
-            ui.switch("Darkmode").bind_value(app.storage.user, "dark_mode").props(
-                "flat"
-            )
+        if current_user.is_superuser:
+            with ui.link(target="/settings"):
+                ui.button(icon="settings").props(
+                    "flat color=white"
+                )
+
+        UserDropdownMenu()
 
     with ui.column().classes("w-full p-5"):
         yield
