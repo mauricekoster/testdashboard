@@ -1,4 +1,4 @@
-from nicegui import ui
+from nicegui import ui, app
 from app.core.user import current_user
 
 
@@ -25,3 +25,19 @@ def display_menu(menu_definition, active_menu="") -> None:
             for m in menu_definition["admin"]:
                 is_active = m["name"] == active_menu
                 menu_item(m["text"], m["path"], m["icon"], is_active)
+
+
+def UserDropdownMenu():
+
+    with ui.dropdown_button(
+            icon="account_circle", auto_close=True
+        ).props("rounded no-caps").classes("q-ma-sm"):
+            with ui.row().classes("m-3"):
+                ui.label(f"Signed in as:").classes("text")
+                ui.label(current_user.full_name).classes("text-bold")
+            ui.separator()
+            ui.item("My account...", on_click=lambda: ui.navigate.to("/myprofile"))
+            ui.item("My work...", on_click=lambda: ui.navigate.to("/mywork"))
+            ui.separator()
+            ui.item("Log out", on_click=lambda: ui.navigate.to("/logout"))
+            

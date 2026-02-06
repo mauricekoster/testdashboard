@@ -27,5 +27,7 @@ class CurrentUser:
         except APIException as e:
             ui.notify(e)
 
-
+    def is_admin(self) -> bool:
+        return self.is_superuser
+    
 current_user = CurrentUser()

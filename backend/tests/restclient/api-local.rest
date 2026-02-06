@@ -1,0 +1,96 @@
+@host = http://localhost:8000/api/v1
+@app = XYZ
+@component = TEST
+@version = 2024.0001
+
+### Get Applications
+GET    {{host}}/apps/
+
+
+### Get Application XYZ
+GET    {{host}}/apps/XYZ
+
+
+### Set application info
+PATCH  {{host}}/apps/XYZ
+content-type: application/json
+
+{
+    "shortname": "XYZ",
+    "name": "Omega XYZ test app",
+    "description": "Een voorbeeld applicatie",
+    "icon": "coffee"
+}
+
+### Set application info small change
+PATCH  {{host}}/apps/XYZ
+content-type: application/json
+
+{
+    "icon": "emoji_food_beverage"
+}
+
+
+### Get Application XYZ active release
+GET    {{host}}/apps/XYZ/active-release
+
+### Set application active release
+PATCH  {{host}}/apps/XYZ/active-release
+content-type: application/json
+
+{
+    "active_release": "2024.0001"
+}
+
+### Get application groups
+GET {{host}}/apps/XYZ/groups
+
+### Set application groups
+PATCH  {{host}}/apps/XYZ/groups
+content-type: application/json
+
+{
+    "groupnames": ["NAME", "NUMBER", "EXTRA"],
+    "groupings": [
+        { "name": "TEST_ONE", "groups": ["TEST", "ONE", "AAA"]},
+        { "name": "TEST_TWO", "groups": ["TEST", "TWO", "AAA"]},
+        { "name": "FOO_ONE", "groups": ["FOO", "ONE", "AAA"]},
+        { "name": "FOO_TWO", "groups": ["FOO", "TWO", "BBB"]},
+        { "name": "BAR", "groups": ["BAR", "ONE", "BBB"]},
+        { "name": "XXX", "groups": ["XXX", "TWO", "BBB"]}
+    ]
+}
+
+### Get release results
+GET {{host}}/apps/XYZ/release/LATEST/results
+
+
+### Get application matrix
+GET {{host}}/apps/XYZ/matrix
+
+### Set application groups
+PATCH  {{host}}/apps/XYZ/matrix
+content-type: application/json
+
+{
+    "row": "NAME",
+    "column": "NUMBER"
+}
+
+### Get release info
+GET {{host}}/apps/XYZ/release/2024.01
+
+### Delete release
+DELETE {{host}}/apps/XYZ/release/2024.0001
+
+### Lock release
+GET {{host}}/apps/XYZ/release/2024.01/lock
+
+
+### Lock release
+PATCH {{host}}/apps/XYZ/release/2024.01/lock
+content-type: application/json
+
+{
+    "locked": false
+}
