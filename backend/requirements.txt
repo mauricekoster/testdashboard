@@ -4,6 +4,7 @@ fastapi[all]==0.128.0
 bcrypt==4.3.0
 passlib[bcrypt]==1.7.4
 
+
 emails==0.6
 tenacity==9.1.2
 
@@ -12,3 +13,5 @@ sqlmodel==0.0.31
 
 psycopg[binary]==3.3.2
 pyjwt==2.10.1
+
+robotframework

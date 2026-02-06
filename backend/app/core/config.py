@@ -1,6 +1,7 @@
 import secrets
 import warnings
 from typing import Annotated, Any, Literal
+from pathlib import Path
 
 from pydantic import (
     AnyUrl,
@@ -25,7 +26,7 @@ def parse_cors(v: Any) -> list[str] | str:
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env", env_ignore_empty=True, extra="ignore"
+        env_file="../.env", env_ignore_empty=True, extra="ignore"
     )
     API_V1_STR: str = "/api/v1"
     SECRET_KEY: str = secrets.token_urlsafe(32)
@@ -46,7 +47,19 @@ class Settings(BaseSettings):
         list[AnyUrl] | str, BeforeValidator(parse_cors)
     ] = []
 
+    DATA_PATH: str = "/data"
+    BACKEND_HOST: str = "http://localhost"
+
+    @computed_field  # type: ignore[misc]
+    @property
+    def output_path(self) -> Path:
+        # basedir = os.path.dirname(os.path.realpath(__file__))
+        path = Path(self.DATA_PATH or "/data").expanduser()
+        path.mkdir(parents=True, exist_ok=True)
+        return path
+
     PROJECT_NAME: str
+    
     POSTGRES_SERVER: str
     POSTGRES_PORT: int = 5432
     POSTGRES_USER: str
