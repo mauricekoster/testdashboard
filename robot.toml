@@ -1,0 +1,4 @@
+output-dir = "results"
+log-level = "INFO"
+
+paths = "backend/tests/robotframework/."

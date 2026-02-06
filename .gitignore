@@ -3,4 +3,6 @@
 #   intended to run in multiple environments; otherwise, check them in:
 .python-version
 
+data/
 results/
+.tar.gz

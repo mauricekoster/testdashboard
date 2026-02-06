@@ -83,6 +83,7 @@ services:
         # - path: ./backend/pyproject.toml
         #   action: rebuild
     volumes:
+      - ./data:/data
       - ./backend/htmlcov:/app/backend/htmlcov
       - ./backend/app:/app/backend/app
       - ./backend/scripts:/app/backend/scripts

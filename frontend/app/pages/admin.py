@@ -5,7 +5,7 @@ from functools import partial
 from app.client import APIException
 
 from app.components.admin.add_user import AddUser
-from app.pages.template import mainpage
+from app.pages.templates.landing import landingpage
 from app.components.main import navbar
 from app.components.common import Heading
 
@@ -19,7 +19,7 @@ router = APIRouter()
 
 @router.page("/admin")
 def show_dashboard():
-    with mainpage("User Management", main_menu, "admin"):
+    with landingpage("admin"):
         content()
 
 

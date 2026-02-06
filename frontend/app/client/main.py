@@ -9,13 +9,18 @@ import logging
 log = logging.getLogger('TRS')
 logging.basicConfig(level=logging.INFO)
 
+from app.core.config import settings
 
 class OpenAPI:
     base_url = ""
     token = ""
 
     def __init__(self):
-        self.base_url = os.environ.get("BACKEND_API_URL", "http://localhost")
+        self.base_url = settings.BACKEND_API_URL
+        if self.base_url.endswith("/"):
+            self.base_url.rstrip("/")
+        if settings.API_V1_STR:
+            self.base_url = f"{self.base_url}/{settings.API_V1_STR}"
         if self.base_url.endswith("/"):
             self.base_url.rstrip("/")
         self.token = ""

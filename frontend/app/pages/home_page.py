@@ -1,7 +1,7 @@
 from app.components.message import message
 
 from nicegui import ui, APIRouter
-from app.pages.template import frame
+from app.pages.template import mainpage
 from app.client.apps import get_apps
 from pprint import pprint
 
@@ -40,7 +40,7 @@ def make_menu(title):
 @router.page("/home")
 def index_page() -> None:
     menu = make_menu("Applications")
-    with frame("Homepage", menu, "homepage"):
+    with mainpage("Homepage", menu, "homepage"):
         content()
 
 

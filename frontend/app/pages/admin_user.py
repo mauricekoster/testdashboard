@@ -8,7 +8,7 @@ from .dialogs import user_dialog, alert_dialog
 
 
 async def user_edit(user_list, e: events.GenericEventArguments):
-    user_id = int(e.args["id"])
+    user_id = e.args["id"]
     user = get_user_by_id(user_id)
     data = UserUpdate(
         email=user.email,

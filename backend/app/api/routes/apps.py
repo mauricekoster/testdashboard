@@ -2,6 +2,7 @@ from pathlib import Path
 from fastapi import APIRouter, HTTPException, Request
 import json
 import shutil
+import logging
 
 from app.core.config import settings
 from app.core.robotframework import process_robotframework
@@ -19,7 +20,7 @@ from app.api.models import (
 
 
 router = APIRouter()
-
+logger = logging.getLogger(__name__)
 
 @router.get("/")
 def get_apps():
@@ -67,6 +68,7 @@ def get_application(application) -> ApplicationInfo:
 
 @router.patch("/{application}")
 def set_application(application, info_in: ApplicationInfo):
+    logger.warning(f"{info_in}")
     path = settings.output_path / application
     if not path.exists():
         path.mkdir(parents=True, exist_ok=True)

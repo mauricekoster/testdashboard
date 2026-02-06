@@ -1,6 +1,10 @@
+from dataclasses import dataclass
+
 from app.components.common import Heading
-from app.pages.template import frame
+from app.pages.template import mainpage
 from app.components import heading
+from app.client.apps import set_application
+from app.models import ApplicationInfo
 
 from nicegui import APIRouter, ui
 
@@ -10,15 +14,16 @@ router = APIRouter(prefix="/app")
 @router.page("/")
 def example_page():
     menu = {"items": [dict(name="home", text="Home", path="/", icon="home")]}
-    with frame("- Applications -", menu):
+    with mainpage("- Applications -", menu):
         Heading("Applications")
 
-
+@dataclass
 class AppIcon:
     name: str
+    
 
 
-app_icon = AppIcon()
+app_icon = AppIcon(None)
 
 
 @ui.refreshable
@@ -30,15 +35,16 @@ def ui_app_icon():
 def new_app():
     def save_app():
         ui.notify("Save app")
-        data = dict(
-            app=abbr.value,
-            fullname=name.value,
+        data = ApplicationInfo(
+            shortname=abbr.value,
+            name=name.value,
             description=description.value,
             icon=icon_name.value,
         )
+        set_application(abbr.value, data)
 
     menu = {"items": [dict(name="home", text="Home", path="/", icon="home")]}
-    with frame("- New Application -", menu, "add-app"):
+    with mainpage("- New Application -", menu, "add-app"):
         heading("Add application", 4)
         abbr = ui.input("Abbreviation (e.g. XYZ)")
         name = ui.input("Name").classes("w-full")

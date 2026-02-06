@@ -2,6 +2,8 @@ from . import APIException
 from .main import openapi
 from operator import itemgetter
 
+from app.models import ApplicationInfo
+
 
 def get_apps():
     response = openapi.get("/apps/")
@@ -61,12 +63,11 @@ def get_application(app: str):
         raise APIException(f"get_application: {response.json()}")
 
 
-def set_application(app: str, data: dict):
+def set_application(app: str, data: ApplicationInfo) -> ApplicationInfo:
     
-    response = openapi.patch(f"/apps/{app}", data)
+    response = openapi.patch(f"/apps/{app}", data.model_dump_json())
     if response.status_code == 200:
-        result = response.json()
-        return result
+        return ApplicationInfo.model_validate_json(response.content)
     else:
         raise APIException(f"set_application: {response.json()}")
 

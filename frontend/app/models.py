@@ -31,7 +31,7 @@ class UserUpdate(UserBase):
 
 
 class UserPublic(UserBase):
-    id: int
+    id: str
 
 
 class UserUpdateMe(BaseModel):
@@ -47,3 +47,11 @@ class UpdatePassword(BaseModel):
 class UsersPublic(BaseModel):
     data: list[UserPublic]
     count: int
+
+
+
+class ApplicationInfo(BaseModel):
+    shortname: str | None = None
+    name: str | None = None
+    description: str | None = None
+    icon: str | None = None

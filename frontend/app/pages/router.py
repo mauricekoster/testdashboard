@@ -1,6 +1,6 @@
 from nicegui import APIRouter
 
-from . import dashboard, admin, home_page, projects, login, myprofile, mywork, settings
+from . import app_pages, dashboard, admin, home_page, projects, login, myprofile, mywork, settings
 
 
 router = APIRouter()
@@ -13,3 +13,4 @@ router.include_router(login.router)
 router.include_router(settings.router)
 
 router.include_router(home_page.router)
+router.include_router(app_pages.router)
