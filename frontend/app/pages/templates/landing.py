@@ -9,7 +9,7 @@ from app.components.navbar import NavBar, NavBarItem
 
 
 nav_items = [
-    NavBarItem("oldhome", "Old home", "/home")
+    NavBarItem("oldhome", "Old home", "/home"),
     NavBarItem("projects", "Projects", "/projects"),
     NavBarItem("mywork", "My Work", "/mywork")
 ]

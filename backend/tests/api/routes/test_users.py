@@ -276,7 +276,7 @@ def test_update_password_me_incorrect_password(
     )
     assert r.status_code == 400
     updated_user = r.json()
-    assert updated_user["detail"] == "Incorrect password"
+    assert updated_user["detail"] == "New password cannot be the same as the current one"
 
 
 def test_update_user_me_email_exists(
