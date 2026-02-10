@@ -2,8 +2,9 @@
     "python-envs.defaultEnvManager": "ms-python.python:pyenv",
     "python-envs.pythonProjects": [],
     "python.testing.pytestArgs": [
-        "backend"
+        "tests"
     ],
+    "python.testing.cwd": "${workspaceFolder}/backend",
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true
 }

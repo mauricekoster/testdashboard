@@ -3,6 +3,8 @@
 @component = TEST
 @version = 2024.0001
 
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzEzMTkwNTYsInN1YiI6ImJkY2Y1MzZhLTQzOTYtNDAyOC04MjJlLTMzM2RmNDkyZGEwOSJ9.ZCHFouD9g6KZmSFaGgsV3194h9Pbx-ywbYfl0HOSv0E
+
 ### Get Applications
 GET    {{host}}/apps/
 
@@ -94,3 +96,27 @@ content-type: application/json
 {
     "locked": false
 }
+
+
+### Get Token
+
+POST {{host}}/login/access-token
+Content-Type: application/x-www-form-urlencoded
+
+username=admin@example.com
+&password=changethis
+
+
+### Create project
+POST {{host}}/projects
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "Omega XYZ test app",
+    "description": "Een voorbeeld applicatie"
+}
+
+### Get Projects
+GET {{host}}/projects
+Authorization: Bearer {{token}}

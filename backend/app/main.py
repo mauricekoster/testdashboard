@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-
+from fastapi.openapi.utils import get_openapi
 from fastapi.routing import APIRoute
 from fastapi.staticfiles import StaticFiles
 
@@ -52,10 +52,86 @@ def register_log_filter() -> None:
 app = FastAPI(
     title=settings.PROJECT_NAME,
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
-    docs_url=f"{settings.API_V1_STR}/docs",
-    redoc_url=f"{settings.API_V1_STR}/redoc",
+    docs_url=None,
+    redoc_url=f"{settings.API_V1_STR}/docs",
     generate_unique_id_function=custom_generate_unique_id,
 )
+
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        title=settings.PROJECT_NAME,
+        version="9.9.9",
+        summary="This is a OpenAPI schema for the application",
+        routes=app.routes,
+    )
+    openapi_schema["x-tagGroups"] = [
+        dict(name="Intro", tags=[
+        ]),
+        dict(name="Define", tags=[
+            "Requirements",
+            "Requirement Types",
+            "Requirement Tags",
+            "Risks",
+            "Risk Classifications",
+            "Risk Tags",
+        ]),
+        dict(name="Design", tags=[
+            "Folders",
+            "Test Cases",
+            "Test Case Tags"
+        ]),
+        dict(name="Plan", tags=[
+            "Milestones",
+            "Milestone Types",
+            "Test Runs",
+            "Test Run Tags",
+            "My Test Runs"
+        ]),
+        dict(name="Track", tags=[
+            "Test Results",
+            "Test Result Statuses"
+        ]),
+        dict(name="Resolve", tags=[
+            "Issues",
+            "Issue Categories",
+            "Issue Priorities",
+            "Issue Resolutions",
+            "Issue Statuses",
+            "Issue Tasks",
+            "Issue Tags",
+            "My Issues",
+            "My Issue Tasks",
+
+        ]),
+        dict(name="General", tags=[
+            "Applications", 
+            "Custom Fields", 
+            "Environments", 
+            "Projects", 
+            "Symbols",
+            "Teams",
+            "Test Types",
+            "Users",
+            "Versions",
+            "Webhooks"]
+            ),
+        dict(name="Various", tags=[
+            "apps",
+            "health",
+            "login",
+            "utils"
+        ]),
+    ]
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+
+app.openapi = custom_openapi
+
+
+
 
 register_log_filter()
 
