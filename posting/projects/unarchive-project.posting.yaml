@@ -1,0 +1,13 @@
+name: Unarchive project
+method: POST
+url: $BASE_URL/projects/:projectId/unarchive
+auth:
+  type: bearer_token
+  bearer_token:
+    token: $auth_token
+headers:
+- name: content-type
+  value: application/json
+path_params:
+- name: projectId
+  value: '1'

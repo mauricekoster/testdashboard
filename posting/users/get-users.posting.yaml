@@ -1,0 +1,6 @@
+name: Get Users
+url: $BASE_URL/users
+auth:
+  type: bearer_token
+  bearer_token:
+    token: $auth_token

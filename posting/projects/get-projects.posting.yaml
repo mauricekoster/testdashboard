@@ -1,0 +1,6 @@
+name: Get projects
+url: $BASE_URL/projects
+auth:
+  type: bearer_token
+  bearer_token:
+    token: $auth_token

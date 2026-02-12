@@ -1,0 +1,9 @@
+name: Get project
+url: $BASE_URL/projects/:projectId
+auth:
+  type: bearer_token
+  bearer_token:
+    token: $auth_token
+path_params:
+- name: projectId
+  value: '1'

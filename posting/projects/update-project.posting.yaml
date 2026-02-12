@@ -1,0 +1,19 @@
+name: Update project
+method: PUT
+url: $BASE_URL/projects/:projectId
+body:
+  content: |-
+    {
+      "completed": true
+    }
+  content_type: application/json
+auth:
+  type: bearer_token
+  bearer_token:
+    token: $auth_token
+headers:
+- name: content-type
+  value: application/json
+path_params:
+- name: projectId
+  value: '1'

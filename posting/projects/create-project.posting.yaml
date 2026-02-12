@@ -1,0 +1,17 @@
+name: Create project
+method: POST
+url: $BASE_URL/projects
+body:
+  content: |-
+    {
+      "name": "Noot",
+      "symbol_id": 1
+    }
+  content_type: application/json
+auth:
+  type: bearer_token
+  bearer_token:
+    token: $auth_token
+headers:
+- name: content-type
+  value: application/json

@@ -1,0 +1,15 @@
+name: Access Token
+method: POST
+url: $BASE_URL/login/access-token
+body:
+  form_data:
+  - name: username
+    value: admin@example.com
+  - name: password
+    value: changethis
+  content_type: application/x-www-form-urlencoded
+headers:
+- name: content-type
+  value: application/x-www-form-urlencoded
+scripts:
+  on_response: access-token.py

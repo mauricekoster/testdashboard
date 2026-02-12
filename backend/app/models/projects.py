@@ -11,7 +11,7 @@ def get_datetime_utc() -> datetime:
 
 # Shared properties
 class ProjectBase(SQLModel):
-    name: str = Field(unique=True, index=True, max_length=100)
+    name: str = Field(unique=True, index=True, max_length=100, title="Name", description="Name of project")
     description: str | None = Field(default=None, max_length=10000)
     completed: bool = False
 
@@ -28,11 +28,24 @@ class ProjectCreate(SQLModel):
     uses_messages: bool = False
 
 
+class ProjectUpdate(SQLModel):
+    name: str | None = None
+    description: str | None = None
+    start_at: str | None = None
+    ends_at: str | None = None
+    uses_applications: bool | None = None
+    uses_requirements: bool | None = None
+    uses_risks: bool | None = None
+    uses_issues: bool | None = None
+    uses_messages: bool | None = None
+    symbol_id: int | None = None
+    completed: bool | None = None
+
 # Database model, database table inferred from class name
 class Project(ProjectBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
     key: uuid.UUID = Field(default_factory=uuid.uuid4, unique=True)
-    name: str = Field(unique=True)
+
     description: str | None = None
     symbol_id: int = 0
     start_at: str | None = None
