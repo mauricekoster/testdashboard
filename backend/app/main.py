@@ -52,7 +52,7 @@ def register_log_filter() -> None:
 app = FastAPI(
     title=settings.PROJECT_NAME,
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
-    docs_url=None,
+    docs_url=f"{settings.API_V1_STR}/swagger",
     redoc_url=f"{settings.API_V1_STR}/docs",
     generate_unique_id_function=custom_generate_unique_id,
 )

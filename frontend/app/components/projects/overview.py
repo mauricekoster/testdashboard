@@ -26,21 +26,21 @@ class ActiveProjects:
                     with ui.row().classes("w-full"):
                         Text(project.description)
 
-                    with ui.row().classes("w-full"):
-                        ui.separator()
-                    with ui.grid(rows=2, columns=2):
-                        with ui.row().classes("items-center mx-2"):
-                            ui.icon('o_create', size='sm')
-                            ui.markdown(f"**{123}** test cases")
-                        with ui.row().classes("items-center mx-2"):
-                            ui.icon('o_schedule', size='sm')
-                            ui.markdown(f"**{123}** test cases")
-                        with ui.row().classes("items-center mx-2"):
-                            ui.icon('o_play_arrow', size='sm')
-                            ui.markdown(f"**{123}** test results")
-                        with ui.row().classes("items-center mx-2"):
-                            ui.icon('o_bug_report', size='sm')
-                            ui.markdown(f"**{123}** issues")
+                    # with ui.row().classes("w-full"):
+                    #     ui.separator()
+                    # with ui.grid(rows=2, columns=2):
+                    #     with ui.row().classes("items-center mx-2"):
+                    #         ui.icon('o_create', size='sm')
+                    #         ui.markdown(f"**{123}** test cases")
+                    #     with ui.row().classes("items-center mx-2"):
+                    #         ui.icon('o_schedule', size='sm')
+                    #         ui.markdown(f"**{123}** test cases")
+                    #     with ui.row().classes("items-center mx-2"):
+                    #         ui.icon('o_play_arrow', size='sm')
+                    #         ui.markdown(f"**{123}** test results")
+                    #     with ui.row().classes("items-center mx-2"):
+                    #         ui.icon('o_bug_report', size='sm')
+                    #         ui.markdown(f"**{123}** issues")
 
                     
 

@@ -1,0 +1,6 @@
+name: Get Requirement Types
+url: $BASE_URL/projects/1/requirement-types
+auth:
+  type: bearer_token
+  bearer_token:
+    token: $auth_token

@@ -65,7 +65,7 @@ api_router.include_router(upload.router, prefix="/upload", tags=["upload"])
 
 # Define
 api_router.include_router(requirements.router, prefix="/requirements", tags=["Requirements"])
-api_router.include_router(requirement_types.router, prefix="/requirement-types", tags=["Requirement Types"])
+api_router.include_router(requirement_types.router, prefix="/projects", tags=["Requirement Types"])
 api_router.include_router(requirement_tags.router, prefix="/requirement-tags", tags=["Requirement Tags"])
 api_router.include_router(risks.router, prefix="/risks", tags=["Risks"])
 api_router.include_router(risk_classifications.router, prefix="/risk-classifications", tags=["Risk Classifications"])

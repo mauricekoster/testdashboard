@@ -3,6 +3,7 @@ from app.models import (
     APIError,
     ProjectPublic,
     ProjectsPublic,
+    ProjectCreate
 )
 from . import APIException
 
@@ -26,3 +27,11 @@ def read_project(project_id: int) -> ProjectPublic:
     else:
         raise APIException(APIError.model_validate_json(response.content))
 
+
+def create_project(project: ProjectCreate) -> ProjectPublic:
+    response = openapi.post("/projects/", data=project.model_dump_json())
+    if response.status_code == 200:
+        user = ProjectPublic.model_validate_json(response.content)
+        return user
+    else:
+        raise APIException(APIError.model_validate_json(response.content))

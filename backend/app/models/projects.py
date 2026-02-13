@@ -19,6 +19,7 @@ class ProjectBase(SQLModel):
 class ProjectCreate(SQLModel):
     name: str
     symbol_id: int
+    description: str | None = None
     start_at: str | None = None
     ends_at: str | None = None
     uses_applications: bool = False

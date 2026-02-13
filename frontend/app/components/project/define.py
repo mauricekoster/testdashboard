@@ -1,16 +1,42 @@
 from nicegui import ui
 from app.core.project import Project
-from app.components.common import Heading
+from app.components.common import Heading, TabConfig, TabsBuilder
+
+
+class RequirementsMain():
+    def __init__(self):
+        with ui.row().classes("w-full"):
+            ui.space()
+            ui.button(icon="more_horiz", color="secundary").props("outline")
+            ui.button("Add requirement...", color="primary").props("no-caps")
+
+        with ui.row().classes("w-full"):
+            with ui.card().classes("w-full"):
+                ui.label("Requirements here")
+
+
+class RisksMain():
+    def __init__(self):
+        with ui.row().classes("w-full"):
+            ui.space()
+            ui.button(icon="more_horiz", color="secundary").props("outline")
+            ui.button("Add risk...", color="primary").props("no-caps")
+
+        with ui.row().classes("w-full"):
+            with ui.card().classes("w-full"):
+                ui.label("Risks here")
+
+
 
 
 class ProjectDefine:
     def __init__(self, project: Project):
 
-        with ui.row().classes("w-full"):
-            with ui.column():
-                Heading(project.name)
-                Heading("Define", "sm")
-            ui.space()
-            #ui.button("Manage Projects", color="secondary")
+        tabs = [
 
-        ui.separator()
+            TabConfig(name="requirements", label="Requirements", component=RequirementsMain),
+            TabConfig(name="risks", label="Risks", component=RisksMain),
+        ]
+        TabsBuilder(tabs)
+
+

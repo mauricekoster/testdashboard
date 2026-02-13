@@ -68,5 +68,5 @@ def show_project_resolve(projectId):
 @router.page("/project/{projectId}/analyze")
 def show_project_dashboard(projectId):
     project = Project(projectId)
-    with projectpage(project, "ranalyzen"):
+    with projectpage(project, "analyze"):
         ProjectAnalyze(project)

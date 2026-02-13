@@ -1,0 +1,11 @@
+name: Get Requirements
+url: $BASE_URL/requirements
+auth:
+  type: bearer_token
+  bearer_token:
+    token: $auth_token
+params:
+- name: page
+  value: '2'
+- name: limit
+  value: '3'

@@ -18,6 +18,19 @@ class ProjectEntryPublic(BaseModel):
     id: int
     created_at: str
 
+class ProjectCreate(ProjectBase):
+    name: str
+    symbol_id: int
+
+    start_at: str | None = None
+    ends_at: str | None = None
+    uses_applications: bool = False
+    uses_requirements: bool = False
+    uses_risks: bool = False
+    uses_issues: bool = False
+    uses_messages: bool = False
+
+
 
 class ProjectPublic(BaseModel):
     data: ProjectEntryPublic
