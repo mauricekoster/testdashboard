@@ -11,11 +11,6 @@ from app.core.project import Project
 from app.components.navbar import NavBar, NavBarItem
 from app.client.projects import read_projects
 
-nav_items = [
-    NavBarItem("define", "Define", "/project/:id/define"),
-    NavBarItem("design", "Design", "/project/:id/design"),
-
-]
 
 
 @contextmanager
@@ -26,14 +21,25 @@ def projectpage(project: Project, active_menu: str):
 
     projects = read_projects()
 
+    nav_items = [
+        NavBarItem("define", "Define", "/project/:id/define"),
+        NavBarItem("design", "Design", "/project/:id/design"),
+        NavBarItem("plan", "Plan", "/project/:id/plan"),
+        NavBarItem("run", "Run", "/project/:id/run"),
+        NavBarItem("track", "Track", "/project/:id/track"),
+        NavBarItem("resolve", "Resolve", "/project/:id/resolve"),
+        NavBarItem("analyze", "Analyze", "/project/:id/analyze"),
+    ]
+
     ui.dark_mode().bind_value(app.storage.user, "dark_mode")
     ui.colors(
         primary="#5E81AC", secondary="#88C0D0", accent="#8FBCBB", positive="#53B689"
     )
     with ui.header().classes(replace="row items-center"):
-        ui.button(icon="home").props(
-            "flat color=white"
-        )
+        with ui.link(target=f"/project/{project.id}"):
+            ui.button(icon="home").props(
+                "flat color=white"
+            )
         ui.label(settings.PROJECT_NAME).classes("font-bold mr-5")
         
         for n in nav_items:

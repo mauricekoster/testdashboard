@@ -1,4 +1,5 @@
 from .dialog import Dialog
+from .icon import Icon
 from .flex import Flex
 from .form import Input, Form, FormLabel
 from .tabs import TabConfig, TabsBuilder
