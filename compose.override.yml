@@ -128,6 +128,7 @@ services:
       - "app.main:app"
     environment:
       - BACKEND_API_URL=http://backend:8000
+      - BACKEND_WS_URL=ws://backend:8000
   #  command: /start-reload.sh
     volumes:
       - ./frontend/app:/app/frontend/app

@@ -17,6 +17,8 @@ class Settings(BaseSettings):
     PROJECT_NAME: str
     BACKEND_API_URL: str = "http://localhost:8000"
     API_V1_STR: str = "/api/v1"
+    BACKEND_WS_URL: str = "ws://localhost:8000"
+    WS_STR: str = "/ws"
     STORAGE_SECRET: str = "changethis"
 
     def _check_default_secret(self, var_name: str, value: str | None) -> None:

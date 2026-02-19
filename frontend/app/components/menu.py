@@ -4,10 +4,11 @@ from app.core.user import current_user
 
 def menu_item(text, target, icon, is_active=False):
     color = "primary" if is_active else "secondary"
+    border = "border" if is_active else ""
 
     with ui.link(target=target):
         ui.button(text, icon=icon, color=color).style("width: 250px;").props(
-            "no-caps flat align='left'"
+            f"no-caps {border} outline rounded align='left'"
         )
 
 

@@ -9,7 +9,7 @@ router = APIRouter()
 
 
 @router.post(
-    "/test-email/",
+    "/test-email",
     dependencies=[Depends(get_current_active_superuser)],
     status_code=201,
 )

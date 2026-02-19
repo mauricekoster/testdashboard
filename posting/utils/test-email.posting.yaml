@@ -1,0 +1,13 @@
+name: Test Email
+method: POST
+url: $BASE_URL/utils/test-email/
+auth:
+  type: bearer_token
+  bearer_token:
+    token: $auth_token
+headers:
+- name: content-type
+  value: application/json
+params:
+- name: email_to
+  value: mauricekoster@gmail.com

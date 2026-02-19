@@ -6,6 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
 
 from app.api.main import api_router
+from app.ws.main import ws_router
 from app.core.config import settings
 
 import logging
@@ -148,7 +149,7 @@ if settings.BACKEND_CORS_ORIGINS:
     )
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
-
+app.include_router(ws_router)
 logger.info(f"DATA_PATH: {settings.output_path}")
 logger.info(f"API_V1_STR: {settings.API_V1_STR}")
 

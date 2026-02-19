@@ -4,7 +4,8 @@ from . import (
     app_pages, app_dashboard, app_releases, 
     dashboard, admin, home_page, 
     project, projects, 
-    login, myprofile, mywork, settings
+    login, myprofile, mywork, settings,
+    chat
 )
 
 
@@ -22,3 +23,5 @@ router.include_router(home_page.router)
 router.include_router(app_pages.router)
 router.include_router(app_dashboard.router)
 router.include_router(app_releases.router)
+
+router.include_router(chat.router)

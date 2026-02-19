@@ -34,6 +34,10 @@ def landingpage(active_menu: str):
         NavBar(nav_items, active_menu)
 
         ui.space()
+        with ui.link(target="/chat"):
+            ui.button(icon="chat").props(
+                "flat color=white"
+            )
         if current_user.is_superuser:
             with ui.link(target="/settings"):
                 ui.button(icon="settings").props(
