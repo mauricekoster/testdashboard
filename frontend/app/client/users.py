@@ -12,8 +12,8 @@ from app.models import (
 from . import APIException
 
 
-def read_users(skip: int = 0, limit: int = 100) -> UsersPublic:
-    response = openapi.get(f"/users/?skip={skip}&limit={limit}")
+def read_users(page: int = 1, limit: int = 100) -> UsersPublic:
+    response = openapi.get(f"/users?page={page}&limit={limit}")
     if response.status_code == 200:
         return UsersPublic.model_validate_json(response.content)
     else:
@@ -21,7 +21,7 @@ def read_users(skip: int = 0, limit: int = 100) -> UsersPublic:
 
 
 def create_user(userdata: UserCreate) -> UserPublic:
-    response = openapi.post("/users/", data=userdata.model_dump_json())
+    response = openapi.post("/users", data=userdata.model_dump_json())
     if response.status_code == 200:
         user = UserPublic.model_validate_json(response.content)
         return user

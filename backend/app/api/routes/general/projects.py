@@ -29,7 +29,7 @@ router = APIRouter()
 
 
 @router.post(
-    "/",
+    "",
     dependencies=[Depends(get_current_active_superuser)],
     response_model=ProjectPublic,
 )
@@ -50,7 +50,7 @@ def create_project(session: SessionDep, project_in: ProjectCreate) -> Any:
 
 
 @router.get(
-    "/",
+    "",
     dependencies=[Depends(get_current_active_superuser)],
     response_model=ProjectsPublic,
 )

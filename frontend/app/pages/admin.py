@@ -12,6 +12,7 @@ from app.components.common import Heading
 from app.pages.menus import main_menu
 
 from app.client.users import read_users
+from app.models import UserPublic
 from .admin_user import user_edit, user_delete
 
 router = APIRouter()
@@ -34,6 +35,7 @@ def get_user_list() -> List[Dict]:
                 is_active=user.is_active,
                 is_superuser=user.is_superuser,
             )
+            # Better: UserPublic.model_dump(user)
             for user in users.data
         ]
     except APIException as e:

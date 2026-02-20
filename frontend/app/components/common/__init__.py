@@ -4,6 +4,8 @@ from .flex import Flex
 from .form import Input, Form, FormLabel
 from .tabs import TabConfig, TabsBuilder
 from .typography import Heading, Text
+from .gravatar import Gravatar
+
 
 __all__ = [
     "Dialog",
@@ -11,6 +13,7 @@ __all__ = [
     "Flex",
     "Form",
     "FormLabel",
+    "Gravatar",
     "Heading",
     "TabConfig",
     "TabsBuilder",

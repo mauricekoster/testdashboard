@@ -1,6 +1,6 @@
 name: Test Email
 method: POST
-url: $BASE_URL/utils/test-email/
+url: $BASE_URL/utils/test-email
 auth:
   type: bearer_token
   bearer_token:

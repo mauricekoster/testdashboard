@@ -56,6 +56,8 @@ class ClosedProjects:
 
 class ProjectsOverview:
     def __init__(self):
+        
+
         projects_tabs = [
             TabConfig(name="active", label="Active", component=ActiveProjects),
             TabConfig(name="completed", label="Completed", component=ClosedProjects),

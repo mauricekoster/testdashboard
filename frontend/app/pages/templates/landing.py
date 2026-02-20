@@ -6,7 +6,7 @@ from app.core.config import settings
 from nicegui import ui, app
 from app.core.user import current_user
 from app.components.navbar import NavBar, NavBarItem
-
+from app.components.common import Gravatar
 
 nav_items = [
     NavBarItem("oldhome", "Old home", "/home"),
@@ -39,10 +39,11 @@ def landingpage(active_menu: str):
                 "flat color=white"
             )
         if current_user.is_superuser:
-            with ui.link(target="/settings"):
+            with ui.link(target="/settings", new_tab=True):
                 ui.button(icon="settings").props(
                     "flat color=white"
                 )
+
 
         UserDropdownMenu()
 

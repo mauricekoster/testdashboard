@@ -20,7 +20,7 @@ from app.core.config import settings
 router = APIRouter()
 
 @router.get(
-    "/",
+    "",
     dependencies=[Depends(get_current_active_superuser)],
     #response_model=ProjectsPublic,
 )

@@ -25,12 +25,21 @@ class ProjectAdd():
     
     def content(self):
         with Form(self.model) as form:
-            Input(form, "name", "Name")
-            Input(form, "description", "Description")
-            
-            with Flex():
-                Checkbox(form, "uses_requirements", "Use requirements")
-                Checkbox(form, "uses_risks", "Use risks")
+            with ui.stepper().props('horizontal header-nav').classes('w-full') as stepper:
+                with ui.step('Details').props('header-nav'):
+                    Input(form, "name", "Name")
+                    Input(form, "description", "Description")
+
+                    with ui.stepper_navigation():
+                        ui.button('Features >', on_click=stepper.next)
+
+                with ui.step('Features').props('header-nav'):
+                    with Flex():
+                        Checkbox(form, "uses_requirements", "Use requirements")
+                        Checkbox(form, "uses_risks", "Use risks")
+                    with ui.stepper_navigation():
+                        # ui.button('Next', on_click=stepper.next)
+                        ui.button('< Details', on_click=stepper.previous).props('outline')
 
     async def show(self):
         dialog = Dialog(
